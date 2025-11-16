@@ -1,42 +1,34 @@
-# 基础镜像使用 Debian 11
-FROM debian:11
+# -----------------------------------------------------------------
+# 黄金方案 Dockerfile
+# -----------------------------------------------------------------
 
-# 设置环境变量
-ENV DEBIAN_FRONTEND=noninteractive
-ENV LANG=C.UTF-8
-ENV PATH=/usr/local/go/bin:$PATH
+# 1. (配方 A)
+#    使用 Alpine Linux，它使用 musl 库，专为静态链接而生
+FROM alpine:3.19
 
-# 安装基础工具和依赖
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    git \
-    build-essential \
-    ca-certificates \
-    unzip \
-    sudo \
-    gnupg \
-    lsb-release \
-    python3 \
-    python3-pip \
-    && rm -rf /var/lib/apt/lists/*
+# 2. (配方 A)
+#    安装编译 CGO (musl) 所需的基础工具 + git
+RUN apk add --no-cache gcc musl-dev git
 
-# 安装 Go 1.21.5
-RUN wget https://go.dev/dl/go1.21.5.linux-amd64.tar.gz \
-    && rm -rf /usr/local/go \
-    && tar -C /usr/local -xzf go1.21.5.linux-amd64.tar.gz \
-    && rm go1.21.5.linux-amd64.tar.gz
+# 3. (配方 B)
+#    安装 Go 1.22.x (我们使用 Go 1.22.10，这是一个已知安全的版本)
+#    我们手动下载，以 100% 确保版本正确
+ARG GO_VERSION="1.22.10"
+RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
+    rm go${GO_VERSION}.linux-amd64.tar.gz
+#    将 Go 添加到环境变量
+ENV PATH="/usr/local/go/bin:${PATH}"
 
-# 安装 Node.js 22.x 和 pnpm
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g pnpm
+# 4. (前端需求)
+#    安装 Node.js, npm, 和 pnpm
+RUN apk add --no-cache nodejs npm
+RUN npm i -g pnpm
 
-# 验证安装
-RUN go version && node -v && npm -v && pnpm -v
+# 5. 设置一个工作目录 (Codespaces 会自动挂载)
+WORKDIR /workspaces
 
-# 设置工作目录
-WORKDIR /workspaces/${GITHUB_REPOSITORY}
-
-# 默认命令
-CMD [ "bash" ]
+# (可选) 验证安装
+RUN go version
+RUN node -v
+RUN pnpm -v
