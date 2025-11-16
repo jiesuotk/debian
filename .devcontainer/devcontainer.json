@@ -6,15 +6,12 @@
     "dockerfile": "Dockerfile"
   },
 
-  // 2. 使用“特性”来安全地安装 Node.js 和 pnpm
-  "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts",
-      "pnpm": true
-    }
-  },
+  // 2. 告诉 Codespaces 容器启动后，使用哪个用户
+  "remoteUser": "vscode",
 
-  // 3. 告诉 Codespaces 容器启动后，使用哪个用户
-  //    (mcr.microsoft.com/devcontainers... 镜像默认创建了 'vscode' 用户)
-  "remoteUser": "vscode"
+  // 3. (关键) 
+  //    "features": { ... } 块已被【完全删除】
+  //    因为所有安装都在 Dockerfile 中完成了。
+
+  "overrideCommand": false
 }
