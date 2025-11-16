@@ -1,15 +1,10 @@
 {
-  "name": "Alist Alpine (Go 1.22) 静态编译环境",
+  "name": "Alist Alpine (Go 1.22) 静态编译环境 - 最小化",
   
-  // 1. 告诉 Codespaces 使用我们旁边的 Dockerfile 来构建环境
   "build": {
     "dockerfile": "Dockerfile"
   },
 
-  // 2. 告诉 Codespaces 容器启动后，使用哪个用户
-  //    (我们 Dockerfile 继承的 'base:alpine' 镜像默认创建了 'vscode' 用户)
   "remoteUser": "vscode",
-
-  // (所有 "features" 已被删除)
   "overrideCommand": false
 }
