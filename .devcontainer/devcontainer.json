@@ -1,15 +1,20 @@
 {
   "name": "Alist Alpine (Go 1.22) 静态编译环境",
   
-  // 关键：告诉 Codespaces 使用我们旁边的 Dockerfile 来构建环境
+  // 1. 告诉 Codespaces 使用我们旁边的 Dockerfile 来构建环境
   "build": {
     "dockerfile": "Dockerfile"
   },
 
-  // 保持容器运行，以便我们可以连接
-  "overrideCommand": false,
+  // 2. 使用“特性”来安全地安装 Node.js 和 pnpm
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts",
+      "pnpm": true
+    }
+  },
 
-  // 在容器创建后，VS Code 应该连接到的用户
-  // (Alpine 默认是 root，为了编译保持简单)
-  "remoteUser": "root"
+  // 3. 告诉 Codespaces 容器启动后，使用哪个用户
+  //    (mcr.microsoft.com/devcontainers... 镜像默认创建了 'vscode' 用户)
+  "remoteUser": "vscode"
 }
