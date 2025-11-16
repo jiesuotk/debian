@@ -1,34 +1,30 @@
 # -----------------------------------------------------------------
-# 黄金方案 Dockerfile
+# 黄金方案 Dockerfile (v2 - 修正版)
 # -----------------------------------------------------------------
 
 # 1. (配方 A)
-#    使用 Alpine Linux，它使用 musl 库，专为静态链接而生
-FROM alpine:3.19
+#    使用【微软官方的】Alpine 基础镜像。
+#    它已经内置了 sudo、bash、git 和一个非 root 用户 (vscode)
+FROM mcr.microsoft.com/devcontainers/base:alpine-3.19
 
 # 2. (配方 A)
-#    安装编译 CGO (musl) 所需的基础工具 + git
-RUN apk add --no-cache gcc musl-dev git
+#    安装 CGO (musl) 编译所需的工具
+#    我们必须切换到 root 用户来安装
+USER root
+
+RUN apk add --no-cache gcc musl-dev
 
 # 3. (配方 B)
-#    安装 Go 1.22.x (我们使用 Go 1.22.10，这是一个已知安全的版本)
-#    我们手动下载，以 100% 确保版本正确
+#    安装 Go 1.22.x (我们使用 1.22.10，一个已知安全的版本)
 ARG GO_VERSION="1.22.10"
 RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
     rm go${GO_VERSION}.linux-amd64.tar.gz
-#    将 Go 添加到环境变量
+
+# 4. (关键)
+#    将 Go 1.22.x 添加到【系统全局】的环境变量中
+#    这样所有用户 (包括 vscode) 都能访问它
 ENV PATH="/usr/local/go/bin:${PATH}"
 
-# 4. (前端需求)
-#    安装 Node.js, npm, 和 pnpm
-RUN apk add --no-cache nodejs npm
-RUN npm i -g pnpm
-
-# 5. 设置一个工作目录 (Codespaces 会自动挂载)
-WORKDIR /workspaces
-
-# (可选) 验证安装
-RUN go version
-RUN node -v
-RUN pnpm -v
+# 5. 切换回安全的非 root 用户
+USER vscode
