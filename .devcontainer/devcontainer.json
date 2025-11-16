@@ -1,16 +1,17 @@
 {
-  "name": "Alist Manual Build",
-  "dockerFile": "Dockerfile",
-  "workspaceFolder": "/workspace",
+  "name": "Alist Alpine (Go 1.22) 静态编译环境",
+  
+  // 1. 告诉 Codespaces 使用我们旁边的 Dockerfile 来构建环境
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  // 2. 告诉 Codespaces 容器启动后，使用哪个用户
   "remoteUser": "vscode",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "golang.go",
-        "vue.volar",
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode"
-      ]
-    }
-  }
+
+  // 3. (关键) 
+  //    "features": { ... } 块已被【完全删除】
+  //    因为所有安装都在 Dockerfile 中完成了。
+
+  "overrideCommand": false
 }
