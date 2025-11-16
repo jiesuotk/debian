@@ -7,11 +7,9 @@
   },
 
   // 2. 告诉 Codespaces 容器启动后，使用哪个用户
+  //    (我们 Dockerfile 继承的 'base:alpine' 镜像默认创建了 'vscode' 用户)
   "remoteUser": "vscode",
 
-  // 3. (关键) 
-  //    "features": { ... } 块已被【完全删除】
-  //    因为所有安装都在 Dockerfile 中完成了。
-
+  // (所有 "features" 已被删除)
   "overrideCommand": false
 }
