@@ -1,19 +1,15 @@
 {
-    "name": "Debian 11 Codespace",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": "."
-    },
-    "remoteUser": "root",
-    "features": {},
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "golang.Go",
-                "ms-vscode.node-debug2",
-                "esbenp.prettier-vscode"
-            ]
-        }
-    },
-    "postCreateCommand": "go version && node -v && pnpm -v"
+  "name": "Alist Alpine (Go 1.22) 静态编译环境",
+  
+  // 关键：告诉 Codespaces 使用我们旁边的 Dockerfile 来构建环境
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  // 保持容器运行，以便我们可以连接
+  "overrideCommand": false,
+
+  // 在容器创建后，VS Code 应该连接到的用户
+  // (Alpine 默认是 root，为了编译保持简单)
+  "remoteUser": "root"
 }
