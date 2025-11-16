@@ -1,16 +1,19 @@
 {
-
-  "image": "mcr.microsoft.com/devcontainers/base:bullseye",
-  
-  "features": {
-    "ghcr.io/devcontainers/features/go:1": {
-      "version": "1.21"
+    "name": "Debian 11 Codespace",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
     },
-
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts"
-    }
-  },
-  
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gcc && npm i -g pnpm"
+    "remoteUser": "root",
+    "features": {},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.Go",
+                "ms-vscode.node-debug2",
+                "esbenp.prettier-vscode"
+            ]
+        }
+    },
+    "postCreateCommand": "go version && node -v && pnpm -v"
 }
