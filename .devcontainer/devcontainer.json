@@ -1,17 +1,28 @@
 {
-  "name": "Alist Static Build Dev",
-  "dockerFile": "Dockerfile",
+  "name": "Alist Alpine (Go 1.23) 静态编译环境",
 
+  // --- 这是我们 v10 Dockerfile 的配置 ---
+  "build": { 
+    "dockerfile": "Dockerfile" 
+  },
+  "remoteUser": "vscode",
+  "overrideCommand": false,
+  
+  // --- 以下是您新添加的自定义设置 ---
+
+  // (用于 strace 等高级调试)
   "runArgs": [
     "--cap-add=SYS_PTRACE",
     "--security-opt",
     "seccomp=unconfined"
   ],
 
+  // (设置默认 shell 为 bash，这很好，因为我们的 Dockerfile 安装了 bash)
   "settings": {
     "terminal.integrated.defaultProfile.linux": "bash"
   },
 
+  // (自动安装 VS Code 插件)
   "customizations": {
     "vscode": {
       "extensions": [
@@ -24,7 +35,6 @@
     }
   },
 
-  "postCreateCommand": "echo 'Devcontainer ready. Go + Node + pnpm installed.'",
-
-  "remoteUser": "vscode"
+  // (构建完成后的提示信息)
+  "postCreateCommand": "echo 'Devcontainer ready. Go + Node + pnpm installed.'"
 }
